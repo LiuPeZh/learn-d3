@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="./package/dist/d3.min.js"></script>
+  <title>First Demo</title>
+</head>
+<body>
+  <script>
+    const margin = ({top: 20, right: 30, bottom: 30, left: 40})
+    // const day = 24 * 1000 * 60 * 60
+    // const data = new Array(5).fill(1).map((item, index) => {
+    //   return new Date(Date.now() - ( 4 - index ) * day)
+    // })
+    // const x = d3.scaleTime()
+    //             .domain(d3.extent(data))
+    //             .range([margin.left, 1000 - margin.right])
+    // const axis = d3.axisBottom(x)
+
+    
+    const data = [
+      { x: 1, value: 2.5 },
+      { x: 2, value: 3.5 },
+      { x: 3, value: 'df' },
+      { x: 4, value: 6.5 },
+    ]
+
+    
+    const x = d3.scaleLinear()
+            .domain([0, 4])
+            .range([margin.left, 500 - margin.right])
+
+    const xAxis = g => g
+        .attr("transform", `translate(0,${300 - margin.bottom})`)
+        .call(d3.axisBottom(x))
+
+    d3.select('body').append('svg')
+        .attr('id', 'lineChart')
+        .attr('width', 1440)
+        .attr('height', 700)
+      .append('g')
+        .call(xAxis)
+
+    const y = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d.value)])
+                .range([300 - margin.bottom, margin.top])
+
+    const line = d3.line()
+                   .defined(d => !isNaN(d.value))
+                   .x(d => x(d.x))
+                   .y(d => y(d.value))
+    
+    d3.select('svg').append('path')
+        .datum(data)
+        .attr('fill', 'none')
+        .attr('stroke', 'steelblue')
+        .attr('storke-width', 1.5)
+        .attr('stroke-linejoin', 'round')
+        .attr('stroke-linecap', 'round')
+        .attr('d', line)
+
+
+    const i = d3.interpolate(100, 200)
+    console.log(i(0.0))
+    console.log(i(0.2))
+    console.log(i(0.4))
+    console.log(i(0.5))
+    console.log(i(1))
+    console.log(d3.interpolateLab('red', 'green')(0.5))
+
+    d3.select('body')
+      .append('div')
+        .selectAll('p')
+        .data([1, 2, 3])
+        .enter()
+        .append('p')
+        .text((d) => d)
+  </script>
+</body>
+</html>
